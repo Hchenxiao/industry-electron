@@ -1,0 +1,8 @@
+src/renderer/fetch/api/**
+src/renderer/typings/**
+src/renderer/libs/**
+vue.config.js
+**/*.js
+{
+    "ignorePatterns": ["src/renderer/fetch/api/**", "src/renderer/typings/**","src/renderer/libs/**","vue.config.js"],
+}

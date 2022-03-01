@@ -3,12 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service electron:serve",
+    "start": "npm run sw2dts && vue-cli-service electron:serve",
+    "lint": "vue-cli-service lint --fix && npm run lint:style --fix",
+    "lint:style": "stylelint src/**/*.{vue,scss}",
+    "build": "vue-cli-service electron:build ",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps",
+    "icons": "electron-icon-builder --input=./public/icons/icon.png --output=public --flatten",
+    "serve:web": "vue-cli-service serve",
+    "build:web": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "sw2dts": "gulp sw2dts",
+    "build:dev:win32": "vue-cli-service electron:build --mode development --win --ia32",
+    "build:dev:win64": "vue-cli-service electron:build --mode development --win --x64",
+    "build:dev:mac": "vue-cli-service electron:build --mode development --mac"
   },
+  "main": "background.js",
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
@@ -16,7 +29,12 @@
     "vuex": "^4.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@types/chai": "^4.2.15",
+    "@types/electron-devtools-installer": "^2.2.0",
+    "@types/js-cookie": "^2.2.6",
+    "@types/lodash": "^4.14.168",
     "@types/mocha": "^8.2.1",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
@@ -30,18 +48,48 @@
     "@vue/eslint-config-standard": "^6.1.0",
     "@vue/eslint-config-typescript": "^9.1.0",
     "@vue/test-utils": "^2.0.0-0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "chai": "^4.2.0",
+    "compression-webpack-plugin": "^5.0.1",
+    "electron": "^13.0.0",
+    "electron-devtools-installer": "^3.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-vue": "^8.0.3",
+    "gulp": "^4.0.2",
+    "gulp-util": "^3.0.8",
+    "js-cookie": "^2.2.1",
     "lint-staged": "^11.1.2",
-    "sass": "^1.32.7",
-    "sass-loader": "^12.0.0",
-    "typescript": "~4.5.5"
+    "prettier": "^1.19.1",
+    "require-context": "^1.1.0",
+    "sass": "^1.49.9",
+    "sass-loader": "^8.0.2",
+    "spectron": "15.0.0",
+    "stylelint": "^13.9.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-webpack-plugin": "^2.1.1",
+    "sw2dts": "^2.5.0",
+    "ts-loader": "^7.0.5",
+    "typescript": "~4.5.5",
+    "vue-cli-plugin-electron-builder": "~2.1.1"
   },
   "gitHooks": {
-    "pre-commit": "lint-staged"
-  }
+    "pre-commit": "lint-staged",
+    "commit-msg": "commitlint -E GIT_PARAMS"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": [
+      "vue-cli-service lint --fix",
+      "git add"
+    ],
+    "*.{css,scss,vue}": [
+      "stylelint --fix",
+      "git add"
+    ]
+  },
+  "__npminstall_done": false
 }
